@@ -1,1 +1,1 @@
-console.log("Hello");
+window.calculator = new calcController();
