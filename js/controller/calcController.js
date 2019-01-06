@@ -35,10 +35,10 @@ class calcController{
     execBtn(value){
         switch (value) {
             case "c":
-                
+                this.clear();
                 break;
             case "ce":
-                
+                this.clearEntry();
                 break;
             case "backspace":
                 
@@ -74,7 +74,7 @@ class calcController{
                 
                 break;
             case "igual":
-                
+                this.calc();
                 break;
             case "1":
             case "2":
@@ -95,6 +95,16 @@ class calcController{
         }
     }
     //END OF BUTTONS
+
+    //CLEARS THE CALCULATOR
+    clear(){
+        this._operation = [];
+    }
+
+    //CLEARS LAST VALUE ~~ STILL NEEDS MORE ADJUSTMENTS
+    clearEntry(){
+        this._operation.pop();
+    }
 
     //VALIDATES IF LAST VALUE WAS AN OPERATOR
     isOperator(value){
@@ -146,6 +156,9 @@ class calcController{
             let last = this._operation.pop();
             result = eval(this._operation.join(""));
             this._operation = [result, last];
+        } else if(this._operation.length == 3){
+            result = eval(this._operation.join(""));
+            this._operation = [result];
         }
 
         this.setLastNumberOnDisplay();
@@ -166,7 +179,7 @@ class calcController{
         this.displayCalc = last;
     }
 
-    //GETS AND SETTERS
+    //GETTERS AND SETTERS
     get displayCalc(){
         return this._displayCalc.innerHTML;
     }
