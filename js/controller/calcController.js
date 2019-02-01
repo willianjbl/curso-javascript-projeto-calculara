@@ -5,10 +5,10 @@ class calcController{
 
         this._operation = [];
         this._displayCalc = document.querySelector('#display');
-        this.inti();
+        this.init();
     }
 
-    inti(){
+    init(){
         this.initButtonEvents();
 
         this.setLastNumberOnDisplay();
@@ -104,25 +104,38 @@ class calcController{
     //CLEARS THE CALCULATOR
     clear(){
         this._operation = [];
+
         this.setLastNumberOnDisplay();
     }
 
     //CLEARS LAST VALUE
     clearEntry(){
-        this._operation.pop();
+        if(!this.isOperator(this.getLastOperation())){
+            this._operation.pop();
+        }
+
         this.setLastNumberOnDisplay();
     }
 
     //ERASE INPUT ON DISPLAY
-    backspace(){
-        
+    backspace(){        
         if(this.getLastItem(false)){
+            let operator;
+            if(this.getLastItem()){
+                operator = this.getLastItem();
+            }
             let display = this.getLastItem(false).toString().split("");
+            display.pop();
 
-            if(display.length > 1){
-                display.pop();
-                this.setLastOperation(parseInt(display.join("")));
-            } else if (display.length == 1) {
+            if(display.length > 0){
+                if(this.isOperator(this.getLastOperation())){
+                    //display.pop();
+                    this._operation = [parseInt(display.join("")),operator];
+                } else {
+                    //display.pop();
+                    this.setLastOperation(parseInt(display.join("")));
+                }                
+            } else if (this.getLastItem(false).toString().length == 1) {
                 display = 0;
                 this.setLastOperation(display);
             }
@@ -177,18 +190,15 @@ class calcController{
 
     //CALCULATES THE OPERATION
     calc(){
-        let result = eval(this._operation.join(""));
-
         if(this._operation.length > 3){
             let last = this._operation.pop();
+            let result = eval(this._operation.join(""));
             this._operation = [result, last];
-        } else if(this._operation.length == 3){
-            result = eval(this._operation.join(""));
-            this._operation = [result];
         }
-
-        if(this._operation.length < 3){
-            
+        
+        if(this._operation.length == 3){
+            let result = eval(this._operation.join(""));
+            this._operation = [result];
         }
 
         this.setLastNumberOnDisplay();
