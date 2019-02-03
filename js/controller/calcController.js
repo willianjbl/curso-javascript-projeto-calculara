@@ -9,9 +9,8 @@ class calcController{
     }
 
     init(){
+        this.clear();
         this.initButtonEvents();
-
-        this.setLastNumberOnDisplay();
     }
 
     //DISPLAYS ERROR ON SCREEN
@@ -49,7 +48,7 @@ class calcController{
                 this.backspace();
                 break;
             case "negativoPositivo":
-                
+                this.alternate();
                 break;
             case "porcento":
                 
@@ -103,7 +102,7 @@ class calcController{
 
     //CLEARS THE CALCULATOR
     clear(){
-        this._operation = [];
+        this._operation = [0];
 
         this.setLastNumberOnDisplay();
     }
@@ -117,7 +116,24 @@ class calcController{
         this.setLastNumberOnDisplay();
     }
 
-    //ERASE INPUT ON DISPLAY
+    //SWITCH NUMBER TO POSITIVE/NEGATIVE
+    alternate(){
+        if(this.getLastItem(false)){
+            let item = this.getLastItem(false).toString().split("");
+            let newValue;
+
+            (item.indexOf("-") > -1)? item.shift() : item.unshift("-");
+
+            newValue = item.join("");
+            this.setLastOperation(parseFloat(newValue));
+            this.setLastNumberOnDisplay();
+        } else {
+            return;
+        }
+        
+    }
+
+    //ERASE LAST INPUT ON DISPLAY
     backspace(){        
         if(this.getLastItem(false)){
             let operator;
@@ -129,10 +145,8 @@ class calcController{
 
             if(display.length > 0){
                 if(this.isOperator(this.getLastOperation())){
-                    //display.pop();
                     this._operation = [parseInt(display.join("")),operator];
                 } else {
-                    //display.pop();
                     this.setLastOperation(parseInt(display.join("")));
                 }                
             } else if (this.getLastItem(false).toString().length == 1) {
@@ -142,7 +156,6 @@ class calcController{
     
             this.setLastNumberOnDisplay();
         }
-        
     }
 
     //VALIDATES IF LAST VALUE WAS AN OPERATOR
@@ -180,7 +193,6 @@ class calcController{
             this.setLastOperation(parseInt(newValue));
             this.setLastNumberOnDisplay();
         }
-        console.log(this._operation);
     }
 
     //RETURNS LAST VALUE OF THE OPERATION
@@ -224,6 +236,8 @@ class calcController{
         if(!last) last = "0";
 
         this.displayCalc = last;
+
+        console.log(this._operation);
     }
 
     //GETTERS AND SETTERS
